@@ -20,7 +20,7 @@ namespace CalorieCalculator
         public bool HighOrLowFat
         {
             get { return highOrLowFat; }
-            set { highOrLowFat = value; ShowCategoryResult(); NotifyChanged(); }
+            set { highOrLowFat = value; GetResult(); NotifyChanged(); }
         }
         private string fatContentInput = ZERO;
         public string FatContentInput
@@ -32,7 +32,7 @@ namespace CalorieCalculator
                 Regex regex = new Regex(@"^\d+(?:\.\d{0,3})?$");
                 if (regex.IsMatch(value))
                 {
-                    fatContentInput = value; CaloriesFromFat(); FatPercentageInFood(); ShowCategoryResult(); NotifyChanged();
+                    fatContentInput = value; GetResult(); NotifyChanged();
                 }
             }
         }
@@ -46,7 +46,7 @@ namespace CalorieCalculator
                 Regex regex = new Regex(@"^\d+(?:\.\d{0,3})?$");
                 if (regex.IsMatch(value))
                 {
-                    totalCaloriesInput = value; FatPercentageInFood(); CaloriesFromFat(); ShowCategoryResult(); NotifyChanged();
+                    totalCaloriesInput = value; GetResult() ; NotifyChanged();
                 }
             }
         }
@@ -68,16 +68,11 @@ namespace CalorieCalculator
             get { return categoryResult; }
             set { categoryResult = value; NotifyChanged(); }
         }
-        public void CaloriesFromFat()
+
+        public void GetResult()
         {
             FatCalories = (double.Parse(FatContentInput) * FAT_Convert_Unit).ToString("0.00");
-        }
-        public void FatPercentageInFood()
-        {
             FatPercentage = ((double.Parse(FatContentInput)) * FAT_Convert_Unit * PERCENTAGE / (double.Parse(TotalCaloriesInput))).ToString("0.00");
-        }
-        public void ShowCategoryResult()
-        {
             if (HighOrLowFat == true)
             {
                 if (((double.Parse(FatContentInput)) * FAT_Convert_Unit * PERCENTAGE / (double.Parse(TotalCaloriesInput))) >= HIGH_FAT_POINT)
@@ -93,10 +88,12 @@ namespace CalorieCalculator
             {
                 CategoryResult = "";
             }
+
         }
+
         public void ResetButton()
         {
-            CategoryResult = "";
+            CategoryResult = string.Empty;
             FatContentInput = ZERO;
             TotalCaloriesInput = ZERO;
             HighOrLowFat = false;
